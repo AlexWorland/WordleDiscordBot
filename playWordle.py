@@ -6,8 +6,8 @@ import time
 from cryptography.fernet import Fernet
 
 # yes yes i'm aware, this is not supposed to be secure. I just want to keep away the webhook scrapers
-webhookAddress = b'gAAAAABkMhgbPRGmFYm1tlozOHQmpJtkxAeUOemH1jisypeEDw2kDeL93eiFgdcmP5R1nIO6WslvPQdzUCmVE5fM-mrIzJRWcZxpp7pMIVMma3xnKmfoaSGEq8xd-0E7VzbUmbNLEkfzsN093tw1AnnudSDJQwLZsOfbblHwFDYI2CVhJG4uzFF9XUdhxwkh3h3PcAXDYbI6r9t0H6Umn-ZRNoWQB_XTbcaLl9vZbuxn60tyQvEmvJQ='
-webhookDecryptKey = b'jBZlLShpxzBd2Kofm6X_eb170iLQpPxgVnh_XfHD5Qw='
+webhookAddress = b'gAAAAABkMxOAi-viXKNQeJTf-QBqj7WlmtPoAolNnnBJ8b0VsxylGDTt5jLaLSDK744wuAuPhbdSFHDEIoo1L7aH0qbHx984R0T8WkdSXbJi_QAWV-7EF_aaqGP1Gc0H_-OixQlM9AD-D5eL8W1VB2i_iSQb2gM09TIJA728qnJZpVTXxtpmU1nEINfqTk30VpfrBkZrkhjfj3-UnYfFWeGZxE1Le7DemU_Js5p_i0Sebi3HgplvJYs='
+webhookDecryptKey = b'HJr4NNii8L22UnrozJEYCSBi7y5En1DDi69MSZXs1Nk='
 f = Fernet(webhookDecryptKey)
 webhookAddress = f.decrypt(webhookAddress).decode("utf-8")
 
