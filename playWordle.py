@@ -3,13 +3,21 @@ import json
 import datetime
 import schedule
 import time
+from cryptography.fernet import Fernet
+
+# yes yes i'm aware, this is not supposed to be secure. I just want to keep away the webhook scrapers
+webhookAddress = b'gAAAAABkMhgbPRGmFYm1tlozOHQmpJtkxAeUOemH1jisypeEDw2kDeL93eiFgdcmP5R1nIO6WslvPQdzUCmVE5fM-mrIzJRWcZxpp7pMIVMma3xnKmfoaSGEq8xd-0E7VzbUmbNLEkfzsN093tw1AnnudSDJQwLZsOfbblHwFDYI2CVhJG4uzFF9XUdhxwkh3h3PcAXDYbI6r9t0H6Umn-ZRNoWQB_XTbcaLl9vZbuxn60tyQvEmvJQ='
+webhookDecryptKey = b'jBZlLShpxzBd2Kofm6X_eb170iLQpPxgVnh_XfHD5Qw='
+f = Fernet(webhookDecryptKey)
+webhookAddress = f.decrypt(webhookAddress).decode("utf-8")
 
 wordList = []
 wordleId = 0
 
 class DiscordWebhook:
     def __init__(self):
-        self.webhookUrl = "https://discord.com/api/webhooks/8"
+        global webhookAddress
+        self.webhookUrl = webhookAddress
         self.webhookUsername = "WordleBot"
     def send(self, message):
         payload = {
@@ -174,7 +182,7 @@ def solveWithSolution(wordleSolution):
     wordleBotHistory = WordleBotHistory(WordleState())
     wordleState = wordleBotHistory.wordleState
     loadWordList()
-    guess = "raise"
+    guess = "crane"
     isFirstWord = True
     while(wordleState.guesses < wordleState.maxGuesses and not wordleState.isSolved() and len(wordList) > 0):
         if not isFirstWord:
@@ -196,8 +204,7 @@ def constructResultString(wordleBotHistory):
     return resultString
 
 def printSolutionToDiscord(wordleBotHistory):
-    print(constructResultString(wordleBotHistory))
-    # DiscordWebhook().send(wordleBotHistory.toString())
+    DiscordWebhook().send(constructResultString(wordleBotHistory))
 
 def main():
     print("Running main at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
