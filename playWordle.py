@@ -239,7 +239,7 @@ def main():
 if __name__ == "__main__":
     # run main every 24 hours at 12:00 PM
     main()
-    # schedule.every().day.at("12:00").do(main)
-    # while True:
-    #     schedule.run_pending()
-    #     time.sleep(1)
+    schedule.every().day.at("12:00").do(main)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
