@@ -232,8 +232,8 @@ def constructResultString(wordleBotHistory):
     return resultString
 
 def printSolutionToDiscord(stringToPrint):
-    print(stringToPrint)
-    # DiscordWebhook().send(stringToPrint)
+    # print(stringToPrint)
+    DiscordWebhook().send(stringToPrint)
 
 def main():
     print("Running main at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
