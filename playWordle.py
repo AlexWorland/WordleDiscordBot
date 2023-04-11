@@ -45,7 +45,9 @@ class Guess:
                 incorrectLetters.append(self.guess[i])
         return incorrectLetters
     def getWrongPlaceLetters(self):
-        wrongPlaceLetters = [[]] * 5
+        wrongPlaceLetters = []
+        for i in range(5):
+            wrongPlaceLetters.append([])
         for i in range(len(self.correctness)):
             if self.correctness[i] == 'y':
                 wrongPlaceLetters[i].append(self.guess[i])
@@ -88,7 +90,9 @@ class WordleState:
     def __init__(self):
         self.correctLetters = [''] * 5
         self.incorrectLetters = []
-        self.wrongPlace = [[]] * 5
+        self.wrongPlace = []
+        for i in range(5):
+            self.wrongPlace.append([])
         self.guesses = 0
         self.maxGuesses = 6
     def addCorrectLetter(self, letter, position):
@@ -97,6 +101,11 @@ class WordleState:
         self.incorrectLetters.append(letter)
     def addWrongPlace(self, letter, position):
         self.wrongPlace[position].append(letter)
+    def addWrongPlace(self, positionListList):
+        for i in range(len(positionListList)):
+            lettersInPosition = positionListList[i]
+            for j in range(len(lettersInPosition)):
+                self.wrongPlace[i].append(lettersInPosition[j])
     def isSolved(self):
         for i in range(len(self.correctLetters)):
             if self.correctLetters[i] == '':
@@ -106,6 +115,8 @@ class WordleState:
         self.guesses += 1
         self.correctLetters = guess.getCorrectLetters()
         self.incorrectLetters += guess.getIncorrectLetters()
+        wrongPlaceLetters = guess.getWrongPlaceLetters()
+        self.addWrongPlace(wrongPlaceLetters)
     def __str__(self):
         print("Guesses: " + self.guesses)
         print("Correct letters: " + self.correctLetters)
@@ -159,13 +170,24 @@ def pruneWordsWithWrongPlaceLetters(wordleState):
     global wordList
     newWordList = []
     for word in wordList:
-        for i in range(len(word)):
-            if word[i] in wordleState.wrongPlace[i]:
+        shouldAddWord = True
+        for position in wordleState.wrongPlace:
+            for letter in position:
+                if letter not in word:
+                    shouldAddWord = False
+                    break
+            if not shouldAddWord:
                 break
-        else:
-            newWordList.append(word)
+        if not shouldAddWord:
+            continue
+        for i in range(len(word)):
+            for j in range(len(wordleState.wrongPlace[i])):
+                if word[i] == wordleState.wrongPlace[i][j]:
+                    shouldAddWord = False
+                    break
+        if shouldAddWord:
+            newWordList.append(word)            
     wordList = newWordList
-
 
 def pruneWordList(wordleState):
     # Prune the word list
@@ -203,19 +225,21 @@ def constructResultString(wordleBotHistory):
     resultString += wordleBotHistory.__str__()
     return resultString
 
-def printSolutionToDiscord(wordleBotHistory):
-    DiscordWebhook().send(constructResultString(wordleBotHistory))
+def printSolutionToDiscord(stringToPrint):
+    print(stringToPrint)
+    # DiscordWebhook().send(constructResultString(wordleBotHistory))
 
 def main():
     print("Running main at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     wordleSolution = getWordleSolution()
     wordleBotHistory = solveWithSolution(wordleSolution)
-    printSolutionToDiscord(wordleBotHistory)
+    stringToPrint = constructResultString(wordleBotHistory)
+    printSolutionToDiscord(stringToPrint)
 
 if __name__ == "__main__":
     # run main every 24 hours at 12:00 PM
     main()
-    schedule.every().day.at("12:00").do(main)
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    # schedule.every().day.at("12:00").do(main)
+    # while True:
+    #     schedule.run_pending()
+    #     time.sleep(1)
