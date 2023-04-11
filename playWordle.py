@@ -78,12 +78,13 @@ class WordleBotHistory:
     def __init__(self, wordleState):
         self.history = []
         self.wordleState = wordleState
+        self.numberOfPossibleWordsHistory = []
     def addGuess(self, guess):
         self.history.append(guess)
     def __str__(self):
         outputString = ""
         for i in range(len(self.history)):
-            outputString += self.history[i].__str__() + "\t" + "||`" + self.history[i].guess + "`||" + "\n"
+            outputString += self.history[i].__str__() + "\t" + "||`" + self.history[i].guess + "`||" + " Possible Words: " + str(self.numberOfPossibleWordsHistory[i]) + "\n"
         return outputString
 
 class WordleState:
@@ -95,6 +96,7 @@ class WordleState:
             self.wrongPlace.append([])
         self.guesses = 0
         self.maxGuesses = 6
+        self.numberOfPossibleWords = len(wordList)
     def addCorrectLetter(self, letter, position):
         self.correctLetters[position] = letter
     def addIncorrectLetter(self, letter):
@@ -117,11 +119,13 @@ class WordleState:
         self.incorrectLetters += guess.getIncorrectLetters()
         wrongPlaceLetters = guess.getWrongPlaceLetters()
         self.addWrongPlace(wrongPlaceLetters)
+        self.numberOfPossibleWords = len(wordList)
     def __str__(self):
         print("Guesses: " + self.guesses)
         print("Correct letters: " + self.correctLetters)
         print("Incorrect letters: " + self.incorrectLetters)
         print("Wrong place: " + self.wrongPlace)
+        print("Number of correct words: " + str(self.numberOfPossibleWords))
 
 def getWordleSolution():
     global wordleId
@@ -201,12 +205,13 @@ def getNextGuess():
 
 def solveWithSolution(wordleSolution):
     # Solve the wordle
+    loadWordList()
     wordleBotHistory = WordleBotHistory(WordleState())
     wordleState = wordleBotHistory.wordleState
-    loadWordList()
     guess = "crane"
     isFirstWord = True
     while(wordleState.guesses < wordleState.maxGuesses and not wordleState.isSolved() and len(wordList) > 0):
+        wordleBotHistory.numberOfPossibleWordsHistory.append(wordleState.numberOfPossibleWords)
         if not isFirstWord:
             guess = getNextGuess()
         isFirstWord = False
@@ -214,6 +219,7 @@ def solveWithSolution(wordleSolution):
         wordleState.addGuess(guess)
         wordleBotHistory.addGuess(guess)
         pruneWordList(wordleState)
+        wordleState.numberOfPossibleWords = len(wordList)
     return wordleBotHistory
 
 def constructResultString(wordleBotHistory):
@@ -226,8 +232,8 @@ def constructResultString(wordleBotHistory):
     return resultString
 
 def printSolutionToDiscord(stringToPrint):
-    # print(stringToPrint)
-    DiscordWebhook().send(stringToPrint)
+    print(stringToPrint)
+    # DiscordWebhook().send(stringToPrint)
 
 def main():
     print("Running main at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
