@@ -13,7 +13,6 @@ webhookAddress = f.decrypt(webhookAddress).decode("utf-8")
 
 wordList = []
 wordleId = 0
-
 class DiscordWebhook:
     def __init__(self):
         global webhookAddress
@@ -26,7 +25,6 @@ class DiscordWebhook:
         }
         requests.post(self.webhookUrl, json=payload)
     
-
 class Guess:
     def __init__(self, guess, wordleSolution):
         self.guess = guess
@@ -158,6 +156,7 @@ def getWordleSolution():
 
 
 def loadWordList():
+    global wordList
     # Load the word list
     with open("wordlist.txt", "r") as wordListFile:
         for line in wordListFile:
@@ -222,7 +221,6 @@ def getNextGuess():
 
 def solveWithSolution(wordleSolution):
     # Solve the wordle
-    loadWordList()
     wordleBotHistory = WordleBotHistory(WordleState())
     wordleState = wordleBotHistory.wordleState
     guess = "crane"
@@ -255,6 +253,7 @@ def printSolutionToDiscord(stringToPrint):
 def main():
     print("Running main at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     wordleSolution = getWordleSolution()
+    loadWordList()
     wordleBotHistory = solveWithSolution(wordleSolution)
     stringToPrint = constructResultString(wordleBotHistory)
     printSolutionToDiscord(stringToPrint)
