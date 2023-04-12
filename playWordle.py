@@ -99,7 +99,7 @@ class WordleBotHistory:
     def __str__(self):
         outputString = ""
         for i in range(len(self.history)):
-            outputString += self.history[i].__str__() + "\t" + "||`" + self.history[i].guess + "`||" + " Possible Words: " + str(self.numberOfPossibleWordsHistory[i]) + "\n"
+            outputString += self.history[i].__str__() + "\t" + "||`" + self.history[i].guess + "`||" + "\tPossible Words: " + str(self.numberOfPossibleWordsHistory[i]) + "\n"
         return outputString
 
 class WordleState:
