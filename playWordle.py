@@ -238,7 +238,7 @@ def solveWithSolution(wordleSolution):
     return wordleBotHistory
 
 def constructResultString(wordleBotHistory):
-    if wordleBotHistory.wordleState.guesses == wordleBotHistory.wordleState.maxGuesses:
+    if wordleBotHistory.wordleState.guesses > wordleBotHistory.wordleState.maxGuesses:
         resultString = "Wordle " + str(wordleId) + " " + "x" + '/' + str(wordleBotHistory.wordleState.maxGuesses)
     else:    
         resultString = "Wordle " + str(wordleId) + " " + str(wordleBotHistory.wordleState.guesses) + '/' + str(wordleBotHistory.wordleState.maxGuesses)
