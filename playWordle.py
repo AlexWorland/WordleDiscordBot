@@ -42,7 +42,8 @@ class Guess:
         incorrectLetters = []
         for i in range(len(self.correctness)):
             if self.correctness[i] == 'g':
-                incorrectLetters.append(self.guess[i])
+                if len(findAllOccurances(self.guess[i], self.wordleSolution)) == 0:
+                    incorrectLetters.append(self.guess[i])
         return incorrectLetters
     def getWrongPlaceLetters(self):
         wrongPlaceLetters = []
@@ -53,15 +54,24 @@ class Guess:
                 wrongPlaceLetters[i].append(self.guess[i])
         return wrongPlaceLetters
     def computeGuessCorrectness(self):
+        counterMap = dict()
+        for i in range(len(self.guess)):
+            if self.guess[i] not in counterMap:
+                counterMap[self.guess[i]] = len(findAllOccurances(self.guess[i], self.wordleSolution))
         # Check the correctness of the guess
         correctness = ""
         for i in range(len(self.guess)):
             if self.guess[i] == self.wordleSolution[i]:
                 correctness += 'G'
             elif self.guess[i] in self.wordleSolution:
-                correctness += 'y'
+                occuranceCount = counterMap[self.guess[i]]
+                if occuranceCount > 0:
+                    correctness += 'y'
+                else:
+                    correctness += 'g'
             else:
                 correctness += 'g'
+            counterMap[self.guess[i]] -= 1
         return correctness
     def __str__(self):
         outputString = ""
@@ -74,6 +84,13 @@ class Guess:
                 outputString += '⬛'
         return outputString
     
+def findAllOccurances(letter, word):
+    occurances = []
+    for i in range(len(word)):
+        if word[i] == letter:
+            occurances.append(i)
+    return occurances
+
 class WordleBotHistory:
     def __init__(self, wordleState):
         self.history = []
@@ -232,7 +249,7 @@ def constructResultString(wordleBotHistory):
     return resultString
 
 def printSolutionToDiscord(stringToPrint):
-    # print(stringToPrint)
+    print(stringToPrint)
     DiscordWebhook().send(stringToPrint)
 
 def main():

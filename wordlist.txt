@@ -1571,8 +1571,6 @@ fairs
 flute
 hindi
 harsh
-whois
-burma
 cease
 poles
 sioux
@@ -4730,7 +4728,6 @@ bucky
 mosul
 blyth
 alfie
-murad
 hunan
 gulls
 balsa
@@ -4777,7 +4774,6 @@ assad
 kelis
 jiffy
 tamar
-gconf
 ryobi
 qname
 colic
@@ -4785,7 +4781,6 @@ warms
 saucy
 kazan
 rosas
-rdram
 eagan
 askew
 groan
@@ -4797,7 +4792,6 @@ antes
 bains
 anche
 desai
-dietz
 ducky
 arran
 adria
@@ -4812,7 +4806,6 @@ dence
 lesbi
 vieux
 basra
-wxdxh
 luder
 osman
 clots
