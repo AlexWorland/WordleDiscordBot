@@ -13,6 +13,7 @@ webhookAddress = f.decrypt(webhookAddress).decode("utf-8")
 
 wordList = []
 wordleId = 0
+didRunToday = False
 class DiscordWebhook:
     def __init__(self):
         global webhookAddress
@@ -250,18 +251,32 @@ def printSolutionToDiscord(stringToPrint):
     print(stringToPrint)
     DiscordWebhook().send(stringToPrint)
 
+def cleanMemory():
+    global wordList
+    wordList = []
+
 def main():
+    global didRunToday
+    if didRunToday:
+        return
     print("Running main at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     wordleSolution = getWordleSolution()
     loadWordList()
     wordleBotHistory = solveWithSolution(wordleSolution)
     stringToPrint = constructResultString(wordleBotHistory)
     printSolutionToDiscord(stringToPrint)
+    cleanMemory()
+    didRunToday = True
+
+def newDay():
+    global didRunToday
+    didRunToday = False
 
 if __name__ == "__main__":
     # run main every 24 hours at 12:00 PM
     main()
     schedule.every().day.at("12:00").do(main)
+    schedule.every().day.at("00:00").do(newDay)
     while True:
         schedule.run_pending()
         time.sleep(1)
